@@ -1,0 +1,31 @@
+[Unit]
+Description=Purad Docker Container
+Documentation=https://github.com/puracore/docker-purad
+After=network.target docker.socket
+Requires=docker.socket
+
+[Service]
+RestartSec=10
+Restart=always
+
+# Modify IP6_PREFIX to match network config
+Environment="NAME=purad"
+Environment="DATA_VOL=purad-data"
+Environment="IMG=pura/purad:dev"
+Environment="PORT=44444:44444/tcp"
+
+# To override environment variables, use local configuration directory:
+# /etc/systemd/system/docker-purad.service/local.conf
+# http://www.freedesktop.org/software/systemd/man/systemd.unit.html
+
+# Clean-up bad state if still hanging around
+ExecStartPre=-/usr/bin/docker rm -f $NAME
+
+# Attempt to pull new image for security updates
+ExecStartPre=-/usr/bin/docker pull $IMG
+
+# Main process
+ExecStart=/usr/bin/docker run --rm -v ${DATA_VOL}:/pura --name ${NAME} -p ${PORT} ${IMG} pura_oneshot $ARGS
+
+[Install]
+WantedBy=multi-user.target

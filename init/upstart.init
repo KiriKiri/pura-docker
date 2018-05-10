@@ -1,0 +1,15 @@
+# Copy to /etc/init/docker-purad.conf
+description "Docker container for purad p2p node"
+start on filesystem and started docker
+stop on runlevel [!2345]
+respawn
+pre-start script
+  # Clean-up if left behind
+  docker rm -f purad-node || true
+
+  # Attempt to always update and fail silently if the network isn't ready
+  docker pull puracore/pura || true
+end script
+script
+  exec docker run --rm -v purad-data:/pura --name=purad-node --rm -p 44444:44444 -p 127.0.0.1:44443:44443 puracore/pura
+end script
