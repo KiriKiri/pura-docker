@@ -27,7 +27,7 @@ Quick Start
         docker run -v purad-data:/pura --name=purad-node -d \
             -p 44444:44444 \
             -p 127.0.0.1:44443:44443 \
-            kylemanna/purad
+            seductivecto/purad
 
 2. Verify that the container is running and purad node is downloading the blockchain
 
