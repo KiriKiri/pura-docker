@@ -15,7 +15,7 @@ RUN useradd -u ${USER_ID} -g pura -s /bin/bash -m -d /pura pura
 
 RUN chown pura:pura -R /pura
 
-ADD https://github.com/puracore/pura/releases/download/v1.0.0.0/PURA-1.0.0-DAWN-Linux-x64.tar.gz /tmp/
+ADD https://github.com/KiriKiri/pura-docker/releases/download/0.0.1/PURA-16.04-linux-no-wallet.tar.gz /tmp/
 RUN tar -xvf /tmp/PURA-*.tar.gz -C /tmp/
 RUN cp /tmp/pura*/bin/*  /usr/local/bin
 RUN rm -rf /tmp/pura*
