@@ -17,22 +17,26 @@ printtoconsole=${PRINTTOCONSOLE:-1}
 rpcuser=${RPCUSER:-purarpc}
 rpcpassword=${RPCPASSWORD:-`dd if=/dev/urandom bs=33 count=1 2>/dev/null | base64`}
 rpcallowip=0.0.0.0/0
+server=1
 EOF
 
 fi
 
 if [ ! -z "$MASTERNODE_PRIV_KEY" ]; then
-    
-    echo "Creating masternode.conf"
-    
-    cat > $HOME/.pura/masternode.conf << EOF
+        
+    [[ $TESTNET = 0 ]] && MN_CONF=$HOME/.pura/masternode.conf || MN_CONF=$HOME/.pura/testnet3/masternode.conf
+    echo "Creating $MN_CONF"
+    mkdir -p $HOME/.pura/testnet3
+
+    cat << EOF > $MN_CONF
 $MASTERNODE_ALIAS $MASTERNODE_IP:$MASTERNODE_PORT $MASTERNODE_PRIV_KEY $MASTERNODE_COLLATERAL_OUTPUT_TXID $MASTERNODE_COLLATERAL_OUTPUT_INDEX
 EOF
+    echo "externalip=$MASTERNODE_IP:$MASTERNODE_PORT" >> $HOME/.pura/pura.conf
     echo "masternode=1" >> $HOME/.pura/pura.conf
     echo "masternodeprivkey=$MASTERNODE_PRIV_KEY" >> $HOME/.pura/pura.conf
 fi
 
 cat $HOME/.pura/pura.conf
-cat $HOME/.pura/masternode.conf
+cat $MN_CONF
 
 echo "Initialization completed successfully"
